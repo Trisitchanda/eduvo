@@ -1,0 +1,410 @@
+{
+  "info": {
+    "name": "Eduvo CRM API",
+    "description": "Comprehensive Postman collection for the Eduvo CRM Demo Request & Follow-up Management System.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Auth",
+      "item": [
+        {
+          "name": "POST Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@eduvo.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Public Demo Requests",
+      "item": [
+        {
+          "name": "Submit Demo Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contact_name\": \"Rahul Sharma\",\n  \"email\": \"rahul@dps.edu.in\",\n  \"phone\": \"+919876543210\",\n  \"institution_name\": \"Delhi Public School\",\n  \"institution_type\": \"K-12 School\",\n  \"preferred_demo_datetime\": \"2026-10-10T10:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/demo-requests",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests"]
+            }
+          }
+        },
+        {
+          "name": "Duplicate Request Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contact_name\": \"Rahul Sharma\",\n  \"email\": \"rahul@dps.edu.in\",\n  \"phone\": \"+919876543210\",\n  \"institution_name\": \"Delhi Public School\",\n  \"institution_type\": \"K-12 School\",\n  \"preferred_demo_datetime\": \"2026-10-10T10:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/demo-requests",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Demo Request Management",
+      "item": [
+        {
+          "name": "Get All Requests",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/demo-requests",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests"]
+            }
+          }
+        },
+        {
+          "name": "Search Requests",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/demo-requests?search=school",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests"],
+              "query": [
+                { "key": "search", "value": "school" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter By Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/demo-requests?status=New",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests"],
+              "query": [
+                { "key": "status", "value": "New" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pagination",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/demo-requests?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Request Details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/demo-requests/1",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Assignment",
+      "item": [
+        {
+          "name": "Assign Lead",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assigned_to\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/demo-requests/1/assign",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests", "1", "assign"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Scheduling",
+      "item": [
+        {
+          "name": "Schedule Demo",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"datetime\": \"2026-10-10T10:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/demo-requests/1/schedule",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests", "1", "schedule"]
+            }
+          }
+        },
+        {
+          "name": "Reschedule Demo",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"datetime\": \"2026-10-12T10:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/demo-requests/1/schedule",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests", "1", "schedule"]
+            }
+          }
+        },
+        {
+          "name": "Conflict Schedule Test",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"datetime\": \"2026-10-10T10:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/demo-requests/2/schedule",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests", "2", "schedule"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Status Management",
+      "item": [
+        {
+          "name": "Update Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Contacted\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/demo-requests/1/status",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests", "1", "status"]
+            }
+          }
+        },
+        {
+          "name": "Invalid Status Transition Test",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Converted\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/demo-requests/1/status",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests", "1", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Follow-ups",
+      "item": [
+        {
+          "name": "Add Follow-up Note",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Discussed requirements, seems very interested.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/demo-requests/1/notes",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests", "1", "notes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Activity History",
+      "item": [
+        {
+          "name": "Get Activity History",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/demo-requests/1/activity",
+              "host": ["{{base_url}}"],
+              "path": ["demo-requests", "1", "activity"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Dashboard",
+      "item": [
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
